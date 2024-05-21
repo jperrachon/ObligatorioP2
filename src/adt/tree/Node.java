@@ -72,4 +72,22 @@ public class Node<K extends Comparable<K>,T>{
             }
         }
     }
+    public void insertNode(K key, T value){
+        if(key.compareTo(this.key)>=0){
+            if(this.rightChild==null){
+                this.rightChild = new Node<K,T>(key,value);
+            }
+            else{
+                this.rightChild.insertNode(key,value);
+            }
+        }
+        else{
+            if(this.leftChild==null){
+                this.leftChild = new Node<K,T>(key,value);
+            }
+            else{
+                this.leftChild.insertNode(key,value);
+            }
+        }
+    }
 }

@@ -24,20 +24,12 @@ public class MyTreeImpl<K extends Comparable<K>,T> implements MyTree<K,T>{
     }
 
     @Override
-    public void insert(K key, T value, K parentKey) {
+    public void insert(K key, T value) {
         if(root==null){
-            root = new Node<>(key, value);
+            root = new Node<K,T>(key,value);
         }
         else{
-            Node<K,T> parent = root.findNode(parentKey);
-            if(parent!=null){
-                if(parent.getLeftChild()==null){
-                    parent.setLeftChild(new Node<K,T>(key,value));
-                }
-                else{
-                    parent.setRightChild(new Node<K,T>(key,value));
-                }
-            }
+            root.insertNode(key,value);
         }
     }
 
