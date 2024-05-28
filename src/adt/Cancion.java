@@ -1,5 +1,7 @@
 package adt;
 
+import java.util.Objects;
+
 public class Cancion {
     private String nombre;
     private String artista;
@@ -45,4 +47,15 @@ public class Cancion {
         this.posicion = posicion;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Cancion cancion)) return false;
+        return getPosicion() == cancion.getPosicion() && Objects.equals(getNombre(), cancion.getNombre()) && Objects.equals(getArtista(), cancion.getArtista()) && Objects.equals(getPais(), cancion.getPais());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getNombre(), getArtista(), getPais(), getPosicion());
+    }
 }
