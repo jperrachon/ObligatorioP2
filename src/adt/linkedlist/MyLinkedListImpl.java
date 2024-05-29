@@ -4,6 +4,8 @@ package adt.linkedlist;
 import adt.queue.*;
 import adt.stack.*;
 
+import java.util.Objects;
+
 
 public class MyLinkedListImpl<T> implements MyList<T>, MyQueue<T>, MyStack<T>{
 
@@ -82,7 +84,7 @@ public class MyLinkedListImpl<T> implements MyList<T>, MyQueue<T>, MyStack<T>{
         // en caso que se haya llegado al final y no se llego a la posicion se retorna null
         if (tempPosition == position) {
 
-            valueToReturn = temp.getValue();
+            valueToReturn = Objects.requireNonNull(temp).getValue();
 
         }
 
@@ -140,21 +142,17 @@ public class MyLinkedListImpl<T> implements MyList<T>, MyQueue<T>, MyStack<T>{
                 this.last = beforeSearchValue;
 
                 // Si es el primer valor y el ultimo (lista de un solo valor)
-            } else if (searchValue == this.last && searchValue == this.first) {
+            } else if (searchValue == this.last) {
 
                 this.first = null;
                 this.last = null;
 
             } else { // resto de los casos
 
-                    beforeSearchValue.setNext(searchValue.getNext());
-                    searchValue.setNext(null);
+                beforeSearchValue.setNext(searchValue.getNext());
+                searchValue.setNext(null);
 
             }
-
-        } else {
-
-            // Si no es encuentra el valor a eliminar no se realiza nada
 
         }
 
@@ -230,8 +228,14 @@ public class MyLinkedListImpl<T> implements MyList<T>, MyQueue<T>, MyStack<T>{
             valueToReturn = this.last.getValue();
         }
 
+
         return valueToReturn;
     }
+
+
+
+
+
 
 
 }
