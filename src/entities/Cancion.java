@@ -1,4 +1,4 @@
-package adt;
+package entities;
 
 import java.util.Objects;
 
