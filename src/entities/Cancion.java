@@ -37,4 +37,7 @@ public class Cancion {
 
     public double getTempo() { return tempo; }
     public void setTempo(double tempo) { this.tempo = tempo; }
+
+    public void addArtista(Artista artista) {
+    }
 }

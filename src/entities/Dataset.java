@@ -1,19 +1,19 @@
 package entities;
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.LinkedList;
-import java.util.List;
 import java.io.IOException;
+import adt.linkedlist.MyLinkedListImpl;
+import adt.linkedlist.MyList;
 public class Dataset {
-    private List<Pais> paises;
+    private MyList<Pais> paises;
 
     public Dataset() {
-        this.paises = new LinkedList<>();
+        this.paises = new MyLinkedListImpl<>();
     }
 
     // Getters y Setters
-    public List<Pais> getPaises() { return paises; }
-    public void setPaises(List<Pais> paises) { this.paises = paises; }
+    public MyList<Pais> getPaises() { return paises; }
+    public void setPaises(MyList<Pais> paises) { this.paises = paises; }
 
     public void cargarDatosDesdeCSV(String rutaArchivo) {
             String linea;

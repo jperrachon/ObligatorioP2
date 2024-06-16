@@ -1,21 +1,27 @@
 package entities;
 
+import adt.linkedlist.MyList;
+
 import java.util.*;
+import adt.linkedlist.MyLinkedListImpl;
+import adt.hash.MyHash;
+import adt.hash.MyHashImpl;
+
 
 public class Estadisticas {
 
-    public List<Cancion> top10CancionesPorPaisYFecha(Pais pais, String fecha) {
-        List<Cancion> canciones = pais.getTop50PorFecha().get(fecha);
+    public MyList<Cancion> top10CancionesPorPaisYFecha(Pais pais, String fecha) {
+        MyList<Cancion> canciones = pais.getTop50PorFecha().get(fecha);
         if (canciones != null && canciones.size() > 10) {
             return canciones.subList(0, 10);
         }
         return canciones;
     }
 
-    public List<Cancion> top5CancionesEnMasTop50(List<Pais> paises, String fecha) {
-        Map<String, Integer> cancionFrecuencia = new HashMap<>();
+    public MyList<Cancion> top5CancionesEnMasTop50(MyList<Pais> paises, String fecha) {
+        MyHash<String, Integer> cancionFrecuencia = new MyHashImpl<>();
         for (Pais pais : paises) {
-            List<Cancion> canciones = pais.getTop50PorFecha().get(fecha);
+            MyList<Cancion> canciones = pais.getTop50PorFecha().get(fecha);
             if (canciones != null) {
                 for (Cancion cancion : canciones) {
                     cancionFrecuencia.put(cancion.getId(), cancionFrecuencia.getOrDefault(cancion.getId(), 0) + 1);
@@ -23,9 +29,9 @@ public class Estadisticas {
             }
         }
 
-        List<Cancion> todasCanciones = new LinkedList<>();
+        MyList<Cancion> todasCanciones = new MyLinkedListImpl<>();
         for (Pais pais : paises) {
-            for (List<Cancion> canciones : pais.getTop50PorFecha().values()) {
+            for (MyList<Cancion> canciones : pais.getTop50PorFecha().values()) {
                 todasCanciones.addAll(canciones);
             }
         }
@@ -37,12 +43,12 @@ public class Estadisticas {
         return todasCanciones;
     }
 
-    public List<Artista> top7ArtistasMasAparecen(List<Pais> paises, String fechaInicio, String fechaFin) {
-        Map<String, Integer> artistaFrecuencia = new HashMap<>();
+    public MyList<Artista> top7ArtistasMasAparecen(List<Pais> paises, String fechaInicio, String fechaFin) {
+       MyHash<String, Integer> artistaFrecuencia = new MyHashImpl<>();
         for (Pais pais : paises) {
             for (String fecha : pais.getTop50PorFecha().keySet()) {
                 if (fecha.compareTo(fechaInicio) >= 0 && fecha.compareTo(fechaFin) <= 0) {
-                    List<Cancion> canciones = pais.getTop50PorFecha().get(fecha);
+                    MyList<Cancion> canciones = pais.getTop50PorFecha().get(fecha);
                     if (canciones != null) {
                         for (Cancion cancion : canciones) {
                             artistaFrecuencia.put(cancion.getArtista(), artistaFrecuencia.getOrDefault(cancion.getArtista(), 0) + 1);
@@ -52,7 +58,7 @@ public class Estadisticas {
             }
         }
 
-        List<Artista> artistas = new LinkedList<>();
+        MyList<Artista> artistas = new MyLinkedListImpl<>();
         for (Map.Entry<String, Integer> entry : artistaFrecuencia.entrySet()) {
             artistas.add(new Artista(entry.getKey()));
         }
@@ -65,7 +71,7 @@ public class Estadisticas {
     }
 
     public int cantidadVecesArtistaEnTop(Pais pais, String artista, String fecha) {
-        List<Cancion> canciones = pais.getTop50PorFecha().get(fecha);
+        MyList<Cancion> canciones = pais.getTop50PorFecha().get(fecha);
         int count = 0;
         if (canciones != null) {
             for (Cancion cancion : canciones) {
@@ -77,12 +83,12 @@ public class Estadisticas {
         return count;
     }
 
-    public int cantidadCancionesPorTempoYRangoFechas(List<Pais> paises, double tempoInicio, double tempoFin, String fechaInicio, String fechaFin) {
+    public int cantidadCancionesPorTempoYRangoFechas(MyList<Pais> paises, double tempoInicio, double tempoFin, String fechaInicio, String fechaFin) {
         int count = 0;
         for (Pais pais : paises) {
             for (String fecha : pais.getTop50PorFecha().keySet()) {
                 if (fecha.compareTo(fechaInicio) >= 0 && fecha.compareTo(fechaFin) <= 0) {
-                    List<Cancion> canciones = pais.getTop50PorFecha().get(fecha);
+                    MyList<Cancion> canciones = pais.getTop50PorFecha().get(fecha);
                     if (canciones != null) {
                         for (Cancion cancion : canciones) {
                             if (cancion.getTempo() >= tempoInicio && cancion.getTempo() <= tempoFin) {
