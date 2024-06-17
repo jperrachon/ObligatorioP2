@@ -1,5 +1,6 @@
 package entities;
 
+import java.util.Date;
 import java.util.Objects;
 
 public class Cancion {
@@ -7,10 +8,10 @@ public class Cancion {
     private String artista;
     private String id;
     private int puesto;
-    private String fecha;
+    private Date fecha;
     private double tempo;
 
-    public Cancion(String nombre, String artista, String id, int puesto, String fecha, double tempo) {
+    public Cancion(String nombre, String artista, String id, int puesto, Date fecha, double tempo) {
         this.nombre = nombre;
         this.artista = artista;
         this.id = id;
@@ -32,8 +33,8 @@ public class Cancion {
     public int getPuesto() { return puesto; }
     public void setPuesto(int puesto) { this.puesto = puesto; }
 
-    public String getFecha() { return fecha; }
-    public void setFecha(String fecha) { this.fecha = fecha; }
+    public Date getFecha() { return fecha; }
+    public void setFecha(Date fecha) { this.fecha = fecha; }
 
     public double getTempo() { return tempo; }
     public void setTempo(double tempo) { this.tempo = tempo; }

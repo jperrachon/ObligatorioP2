@@ -10,7 +10,7 @@ import adt.hash.MyHashImpl;
 
 public class Estadisticas {
 
-    public MyList<Cancion> top10CancionesPorPaisYFecha(Pais pais, String fecha) {
+    public MyList<Cancion> top10CancionesPorPaisYFecha(Pais pais, Date fecha) {
         MyList<Cancion> canciones = pais.getTop50PorFecha().get(fecha);
         if (canciones != null && canciones.size() > 10) {
             return canciones.subList(0, 10);
@@ -18,7 +18,7 @@ public class Estadisticas {
         return canciones;
     }
 
-    public MyList<Cancion> top5CancionesEnMasTop50(MyList<Pais> paises, String fecha) {
+    public MyList<Cancion> top5CancionesEnMasTop50(MyList<Pais> paises, Date fecha) {
         MyHash<String, Integer> cancionFrecuencia = new MyHashImpl<>();
         int paisesLength = paises.size();
         for (int i = 0; i < paisesLength; i++) {
@@ -50,13 +50,13 @@ public class Estadisticas {
         return todasCanciones;
     }
 
-    public MyList<Artista> top7ArtistasMasAparecen(List<Pais> paises, String fechaInicio, String fechaFin) {
+    public MyList<Artista> top7ArtistasMasAparecen(List<Pais> paises, Date fechaInicio, Date fechaFin) {
        MyHash<String, Integer> artistaFrecuencia = new MyHashImpl<>();
         for (int i = 0; i < paises.size(); i++) {
             Pais pais = paises.get(i);
-            MyList<String> fechas = pais.getTop50PorFecha().keySet();
+            MyList<Date> fechas = pais.getTop50PorFecha().keySet();
             for (int j = 0; j < pais.getTop50PorFecha().size(); j++) {
-                String fecha = fechas.get(j);
+                Date fecha = fechas.get(j);
                 if (fecha.compareTo(fechaInicio) >= 0 && fecha.compareTo(fechaFin) <= 0) {
                     MyList<Cancion> canciones = pais.getTop50PorFecha().get(fecha);
                     if (canciones != null) {
@@ -74,11 +74,10 @@ public class Estadisticas {
         }
 
         MyList<Artista> artistas = new MyLinkedListImpl<>();
+        MyList<String> artistasNombre = artistaFrecuencia.keySet();
         for (int i = 0; i < artistaFrecuencia.size(); i++) {
-            MyHash.
-            artistas.add(new Artista(entry.getKey()));
+            artistas.add(new Artista(artistasNombre.get(i)));
         }
-
         artistas.sort((a, b) -> artistaFrecuencia.get(b.getNombre()) - artistaFrecuencia.get(a.getNombre()));
         if (artistas.size() > 7) {
             return artistas.subList(0, 7);
@@ -86,7 +85,7 @@ public class Estadisticas {
         return artistas;
     }
 
-    public int cantidadVecesArtistaEnTop(Pais pais, String artista, String fecha) {
+    public int cantidadVecesArtistaEnTop(Pais pais, String artista, Date fecha) {
         MyList<Cancion> canciones = pais.getTop50PorFecha().get(fecha);
         int count = 0;
         if (canciones != null) {
@@ -100,20 +99,12 @@ public class Estadisticas {
         return count;
     }
 
-    public int cantidadCancionesPorTempoYRangoFechas(MyList<Pais> paises, double tempoInicio, double tempoFin, String fechaInicio, String fechaFin) {
+    public int cantidadCancionesPorTempoYRangoFechas(MyList<Cancion> canciones, double tempoInicio, double tempoFin, Date fechaInicio, Date fechaFin) {
         int count = 0;
-        for (Pais pais : paises) {
-            for (String fecha : pais.getTop50PorFecha().keySet()) {
-                if (fecha.compareTo(fechaInicio) >= 0 && fecha.compareTo(fechaFin) <= 0) {
-                    MyList<Cancion> canciones = pais.getTop50PorFecha().get(fecha);
-                    if (canciones != null) {
-                        for (Cancion cancion : canciones) {
-                            if (cancion.getTempo() >= tempoInicio && cancion.getTempo() <= tempoFin) {
-                                count++;
-                            }
-                        }
-                    }
-                }
+        for (int i = 0; i < canciones.size(); i++) {
+            Cancion cancion = canciones.get(i);
+            if (cancion.getTempo() >= tempoInicio && cancion.getTempo() <= tempoFin && cancion.getFecha().compareTo(fechaInicio) >= 0 && cancion.getFecha().compareTo(fechaFin) <= 0) {
+                count++;
             }
         }
         return count;
