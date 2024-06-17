@@ -12,4 +12,7 @@ public interface MyList<T> {
 
     int size();
 
+    MyList<T> subList(int fromIndex, int toIndex);
+
+
 }

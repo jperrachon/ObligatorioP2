@@ -23,6 +23,23 @@ public class MyLinkedListImpl<T> implements MyList<T>, MyQueue<T>, MyStack<T>{
         addToTheEnd(value);
     }
 
+    @Override
+    public MyList<T> subList(int fromIndex, int toIndex) {
+        MyList<T> subList = new MyLinkedListImpl<>();
+        Node<T> temp = this.first;
+        int index = 0;
+        while (temp != null && index < fromIndex) {
+            temp = temp.getNext();
+            index++;
+        }
+        while (temp != null && index < toIndex) {
+            subList.add(temp.getValue());
+            temp = temp.getNext();
+            index++;
+        }
+        return subList;
+    }
+
     private void addToBeginning(T value) {
         if (value != null) {
 
