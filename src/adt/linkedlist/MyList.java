@@ -14,5 +14,11 @@ public interface MyList<T> {
 
     MyList<T> subList(int fromIndex, int toIndex);
 
+    void sort(java.util.Comparator<T> comparator);
+
+    Node<T> getFirst();
+
+    Node<T> getLast();
+
 
 }

@@ -20,19 +20,26 @@ public class Estadisticas {
 
     public MyList<Cancion> top5CancionesEnMasTop50(MyList<Pais> paises, String fecha) {
         MyHash<String, Integer> cancionFrecuencia = new MyHashImpl<>();
-        for (Pais pais : paises) {
-            MyList<Cancion> canciones = pais.getTop50PorFecha().get(fecha);
+        int paisesLength = paises.size();
+        for (int i = 0; i < paisesLength; i++) {
+            MyList<Cancion> canciones = paises.get(i).getTop50PorFecha().get(fecha);
+            int cancionesLength = canciones.size();
             if (canciones != null) {
-                for (Cancion cancion : canciones) {
-                    cancionFrecuencia.put(cancion.getId(), cancionFrecuencia.getOrDefault(cancion.getId(), 0) + 1);
+                for (int j = 0; j < cancionesLength; j++) {
+                    Cancion cancion = canciones.get(j);
+                    if (cancionFrecuencia.contains(cancion.getId())) {
+                        cancionFrecuencia.put(cancion.getId(), cancionFrecuencia.get(cancion.getId()) + 1);
+                    } else {
+                        cancionFrecuencia.put(cancion.getId(), 1);
+                    }
                 }
             }
         }
-
         MyList<Cancion> todasCanciones = new MyLinkedListImpl<>();
-        for (Pais pais : paises) {
-            for (MyList<Cancion> canciones : pais.getTop50PorFecha().values()) {
-                todasCanciones.addAll(canciones);
+        for (int i = 0; i < paisesLength; i++) {
+            Pais pais = paises.get(i);
+            for (int j = 0; j <pais.getTop50PorFecha().get(fecha).size(); j++) {
+                todasCanciones.add(pais.getTop50PorFecha().get(fecha).get(j));
             }
         }
 
@@ -45,13 +52,21 @@ public class Estadisticas {
 
     public MyList<Artista> top7ArtistasMasAparecen(List<Pais> paises, String fechaInicio, String fechaFin) {
        MyHash<String, Integer> artistaFrecuencia = new MyHashImpl<>();
-        for (Pais pais : paises) {
-            for (String fecha : pais.getTop50PorFecha().keySet()) {
+        for (int i = 0; i < paises.size(); i++) {
+            Pais pais = paises.get(i);
+            MyList<String> fechas = pais.getTop50PorFecha().keySet();
+            for (int j = 0; j < pais.getTop50PorFecha().size(); j++) {
+                String fecha = fechas.get(j);
                 if (fecha.compareTo(fechaInicio) >= 0 && fecha.compareTo(fechaFin) <= 0) {
                     MyList<Cancion> canciones = pais.getTop50PorFecha().get(fecha);
                     if (canciones != null) {
-                        for (Cancion cancion : canciones) {
-                            artistaFrecuencia.put(cancion.getArtista(), artistaFrecuencia.getOrDefault(cancion.getArtista(), 0) + 1);
+                        for (int k = 0; k < canciones.size(); k++) {
+                            Cancion cancion = canciones.get(k);
+                            if (artistaFrecuencia.contains(cancion.getArtista())) {
+                                artistaFrecuencia.put(cancion.getArtista(), artistaFrecuencia.get(cancion.getArtista()) + 1);
+                            } else {
+                                artistaFrecuencia.put(cancion.getArtista(), 1);
+                            }
                         }
                     }
                 }
@@ -59,7 +74,8 @@ public class Estadisticas {
         }
 
         MyList<Artista> artistas = new MyLinkedListImpl<>();
-        for (Map.Entry<String, Integer> entry : artistaFrecuencia.entrySet()) {
+        for (int i = 0; i < artistaFrecuencia.size(); i++) {
+            MyHash.
             artistas.add(new Artista(entry.getKey()));
         }
 
@@ -74,7 +90,8 @@ public class Estadisticas {
         MyList<Cancion> canciones = pais.getTop50PorFecha().get(fecha);
         int count = 0;
         if (canciones != null) {
-            for (Cancion cancion : canciones) {
+            for (int i = 0; i < canciones.size(); i++) {
+                Cancion cancion = canciones.get(i);
                 if (cancion.getArtista().equals(artista)) {
                     count++;
                 }

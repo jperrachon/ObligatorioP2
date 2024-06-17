@@ -23,8 +23,16 @@ public class Pais {
     public void setTop50PorFecha(MyHash<String, MyList<Cancion>> top50PorFecha) { this.top50PorFecha = top50PorFecha; }
 
     public void agregarCancion(String fecha, Cancion cancion, int puesto) {
-        this.top50PorFecha.computeIfAbsent(fecha, k -> new MyLinkedListImpl<>()).add(cancion);
+        if (top50PorFecha.contains(fecha)) {
+            MyList<Cancion> canciones = top50PorFecha.get(fecha);
+            canciones.add(cancion);
+            top50PorFecha.remove(fecha);
+            top50PorFecha.put(fecha, canciones);
+        }
+        else {
+            MyList<Cancion> canciones = new MyLinkedListImpl<>();
+            canciones.add(cancion);
+            top50PorFecha.put(fecha, canciones);
+        }
     }
-
-
 }

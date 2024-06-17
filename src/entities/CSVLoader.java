@@ -17,9 +17,9 @@ public class CSVLoader {
     private MyHash<String, Pais> paises;
 
     public CSVLoader() {
-        canciones = new MyHashImpl<>(50);
-        artistas = new MyHashImpl<>(50);
-        paises = new MyHashImpl<>(50);
+        canciones = new MyHashImpl<>();
+        artistas = new MyHashImpl<>();
+        paises = new MyHashImpl<>();
     }
 
     public void cargarDatos(String filePath) {

@@ -2,10 +2,16 @@ package entities;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+
+import adt.hash.MyHash;
 import adt.linkedlist.MyLinkedListImpl;
 import adt.linkedlist.MyList;
 public class Dataset {
     private MyList<Pais> paises;
+    private MyHash<String,Cancion> canciones;
+    private MyList<Artista> artistas;
+
+
 
     public Dataset() {
         this.paises = new MyLinkedListImpl<>();

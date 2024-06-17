@@ -4,6 +4,7 @@ package adt.linkedlist;
 import adt.queue.*;
 import adt.stack.*;
 
+import java.util.Comparator;
 import java.util.Objects;
 
 
@@ -17,6 +18,15 @@ public class MyLinkedListImpl<T> implements MyList<T>, MyQueue<T>, MyStack<T>{
         this.first = null;
         this.last = null;
     }
+
+    public Node<T> getFirst() {
+        return first;
+    }
+
+    public Node<T> getLast() {
+        return last;
+    }
+
 
     @Override
     public void add(T value) {
@@ -38,6 +48,23 @@ public class MyLinkedListImpl<T> implements MyList<T>, MyQueue<T>, MyStack<T>{
             index++;
         }
         return subList;
+    }
+
+    @Override
+    public void sort(Comparator<T> comparator) {
+        Node<T> temp = this.first;
+        while (temp != null) {
+            Node<T> next = temp.getNext();
+            while (next != null) {
+                if (comparator.compare(temp.getValue(), next.getValue()) > 0) {
+                    T tempValue = temp.getValue();
+                    temp.setValue(next.getValue());
+                    next.setValue(tempValue);
+                }
+                next = next.getNext();
+            }
+            temp = temp.getNext();
+        }
     }
 
     private void addToBeginning(T value) {

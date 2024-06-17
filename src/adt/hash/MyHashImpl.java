@@ -1,5 +1,8 @@
 package adt.hash;
 
+import adt.linkedlist.MyLinkedListImpl;
+import adt.linkedlist.MyList;
+
 public class MyHashImpl<K extends Comparable<K>, V> implements MyHash<K,V> {
     private HNode<K, V>[] table;
     private static final int INITIAL_CAPACITY = 10;
@@ -92,5 +95,16 @@ public class MyHashImpl<K extends Comparable<K>, V> implements MyHash<K,V> {
 
     private int hash(K key) {
         return Math.abs(key.hashCode()) % table.length;
+    }
+
+    @Override
+    public MyList<K> keySet() {
+        MyList<K> keys = new MyLinkedListImpl<>();
+        for (HNode<K, V> node : table) {
+            if (node != null) {
+                keys.add(node.getKey());
+            }
+        }
+        return keys;
     }
 }
