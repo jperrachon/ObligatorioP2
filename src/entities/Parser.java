@@ -1,32 +1,36 @@
 package entities;
+import adt.hash.MyHash;
+import adt.hash.MyHashImpl;
+import adt.linkedlist.MyLinkedListImpl;
+import adt.linkedlist.MyList;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class Parser {
-    private Map<String, Cancion> canciones;
-    private List<Pais> paises;
-    private List<Artista> artistas;
+    private MyHash<String, Cancion> canciones;
+    private MyList<Pais> paises;
+    private MyList<Artista> artistas;
 
     public Parser() {
-        this.canciones = new HashMap<>();
-        this.paises = new ArrayList<>();
-        this.artistas = new ArrayList<>();
+        this.canciones = new MyHashImpl<>();
+        this.paises = new MyLinkedListImpl<>();
+        this.artistas = new MyLinkedListImpl<>();
     }
 
     public void parseCsv(String csvFile) {
         String line = "";
         String cvsSplitBy = ",";
-        Set<Pais> paisesSet = new HashSet<>();
-        Set<Artista> artistasSet = new HashSet<>();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
 
         try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
             // Leer la cabecera y omitirla
@@ -35,43 +39,41 @@ public class Parser {
             while ((line = br.readLine()) != null) {
                 String[] datos = line.split(cvsSplitBy);
 
-                // Asumiendo el orden de los campos en el CSV:
-                String id = datos[0].replace("\"", "");
-                String nombreCancion = datos[1].replace("\"", "");
-                String nombreArtista = datos[2].replace("\"", "");
-                Pais pais = new Pais(datos[3].replace("\"", ""));
-                Artista artista = new Artista(nombreArtista, pais);
-                int reproducciones = Integer.parseInt(datos[10].replace("\"", ""));
+                String id = datos[0].replace("\"", ""); // spotify_id
+                String nombreCancion = datos[1].replace("\"", ""); // name
+                String nombreArtista = datos[2].replace("\"", ""); // artists
+                int puesto = Integer.parseInt(datos[3].replace("\"", "")); // daily_rank
+                String paisNombre = datos[6].replace("\"", ""); // country
+                Date fechaLanzamiento = dateFormat.parse(datos[12].replace("\"", "")); // album_release_date
+                double tempo = Double.parseDouble(datos[23].replace("\"", "")); // tempo
+                int duracion = Integer.parseInt(datos[10].replace("\"", "")); // duration_ms
 
-                LocalDate fechaLanzamiento = LocalDate.parse(datos[7].replace("\"", ""), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                int duracion = Integer.parseInt(datos[24].replace("\"", ""));
-                boolean explicito = Boolean.parseBoolean(datos[9].replace("\"", ""));
-
-                Cancion cancion = new Cancion(id, nombreCancion, artista, fechaLanzamiento, estadisticas, duracion, explicito);
+                Artista artista = new Artista(nombreArtista);
+                Pais pais = new Pais(paisNombre);
+                Cancion cancion = new Cancion(nombreCancion, artista, id, puesto,  fechaLanzamiento, tempo);
 
                 canciones.put(id, cancion);
-                paisesSet.add(pais);
-                artistasSet.add(artista);
+                paises.add(pais);
+                artistas.add(artista);
             }
-
-            this.paises = new ArrayList<>(paisesSet);
-            this.artistas = new ArrayList<>(artistasSet);
 
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
         }
     }
 
     // Getters
-    public Map<String, Cancion> getCanciones() {
+    public MyHash<String, Cancion> getCanciones() {
         return canciones;
     }
 
-    public List<Pais> getPaises() {
+    public MyList<Pais> getPaises() {
         return paises;
     }
 
-    public List<Artista> getArtistas() {
+    public MyList<Artista> getArtistas() {
         return artistas;
     }
 }

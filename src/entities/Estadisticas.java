@@ -10,6 +10,14 @@ import adt.hash.MyHashImpl;
 
 public class Estadisticas {
 
+    private MyHash<Date, MyList<Cancion>> top50PorFechaPorPais(Pais pais) {
+        MyHash<Date, MyList<Cancion>> top50PorFechaPorPais = new MyHashImpl<>();
+
+
+
+        return top50PorFechaPorPais;
+    }
+
     public MyList<Cancion> top10CancionesPorPaisYFecha(Pais pais, Date fecha) {
         MyList<Cancion> canciones = pais.getTop50PorFecha().get(fecha);
         if (canciones != null && canciones.size() > 10) {
@@ -19,6 +27,7 @@ public class Estadisticas {
     }
 
     public MyList<Cancion> top5CancionesEnMasTop50(MyList<Pais> paises, Date fecha) {
+
         MyHash<String, Integer> cancionFrecuencia = new MyHashImpl<>();
         int paisesLength = paises.size();
         for (int i = 0; i < paisesLength; i++) {
@@ -62,10 +71,10 @@ public class Estadisticas {
                     if (canciones != null) {
                         for (int k = 0; k < canciones.size(); k++) {
                             Cancion cancion = canciones.get(k);
-                            if (artistaFrecuencia.contains(cancion.getArtista())) {
-                                artistaFrecuencia.put(cancion.getArtista(), artistaFrecuencia.get(cancion.getArtista()) + 1);
+                            if (artistaFrecuencia.contains(cancion.getArtista().getNombre())) {
+                                artistaFrecuencia.put(cancion.getArtista().getNombre(), artistaFrecuencia.get(cancion.getArtista().getNombre()) + 1);
                             } else {
-                                artistaFrecuencia.put(cancion.getArtista(), 1);
+                                artistaFrecuencia.put(cancion.getArtista().getNombre(), 1);
                             }
                         }
                     }
@@ -85,7 +94,7 @@ public class Estadisticas {
         return artistas;
     }
 
-    public int cantidadVecesArtistaEnTop(Pais pais, String artista, Date fecha) {
+    public int cantidadVecesArtistaEnTop(Pais pais, Artista artista, Date fecha) {
         MyList<Cancion> canciones = pais.getTop50PorFecha().get(fecha);
         int count = 0;
         if (canciones != null) {
