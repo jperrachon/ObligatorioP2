@@ -41,20 +41,31 @@ public class Parser {
 
                 String id = datos[0].replace("\"", ""); // spotify_id
                 String nombreCancion = datos[1].replace("\"", ""); // name
+
                 String nombreArtista = datos[2].replace("\"", ""); // artists
+                //separar nombre artista en varios artistas
+                String[] nombresArtistas = nombreArtista.split(",");
+
                 int puesto = Integer.parseInt(datos[3].replace("\"", "")); // daily_rank
                 String paisNombre = datos[6].replace("\"", ""); // country
                 Date fechaLanzamiento = dateFormat.parse(datos[12].replace("\"", "")); // album_release_date
                 double tempo = Double.parseDouble(datos[23].replace("\"", "")); // tempo
                 int duracion = Integer.parseInt(datos[10].replace("\"", "")); // duration_ms
 
-                Artista artista = new Artista(nombreArtista);
+                MyList<Artista> artistasCancion = new MyLinkedListImpl<>();
+                for(String nombre : nombresArtistas){
+                    Artista artista = new Artista(nombre);
+                    artistas.add(artista);
+                    artistasCancion.add(artista);
+                }
+                if(paisNombre.isEmpty()){
+                    paisNombre = "Global";
+                }
                 Pais pais = new Pais(paisNombre);
-                Cancion cancion = new Cancion(nombreCancion, artista, id, puesto,  fechaLanzamiento, tempo);
+                Cancion cancion = new Cancion(nombreCancion, artistasCancion, id, puesto,  fechaLanzamiento, tempo, pais);
 
                 canciones.put(id, cancion);
                 paises.add(pais);
-                artistas.add(artista);
             }
 
         } catch (IOException e) {

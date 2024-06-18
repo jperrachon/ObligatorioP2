@@ -89,7 +89,7 @@ public class Estadisticas {
                             for (int l = 0; l < cancion.getArtista().size(); l++) {
                                 String artista = cancion.getArtista().get(l).getNombre();
                                 if (artistaFrecuencia.contains(artista)) {
-                                    artistaFrecuencia.put(artista, artistaFrecuencia.get(cancion.getArtista().getNombre()) + 1);
+                                    artistaFrecuencia.put(artista, artistaFrecuencia.get(artista) + 1);
                                 } else {
                                     artistaFrecuencia.put(artista, 1);
                                 }
@@ -112,13 +112,13 @@ public class Estadisticas {
         return artistas;
     }
 
-    public int cantidadVecesArtistaEnTop(Pais pais, Artista artista, Date fecha) {
-        MyList<Cancion> canciones = pais.getTop50PorFecha().get(fecha);
+    public int cantidadVecesArtistaEnTop(Pais pais, Artista artista, Date fecha, MyHash<String, Cancion> todasCanciones) {
+        MyList<Cancion> canciones = top50PorFechaPorPais(pais, todasCanciones).get(fecha);
         int count = 0;
         if (canciones != null) {
             for (int i = 0; i < canciones.size(); i++) {
                 Cancion cancion = canciones.get(i);
-                if (cancion.getArtista().equals(artista)) {
+                if (cancion.getArtista().contains(artista)) {
                     count++;
                 }
             }
@@ -126,11 +126,14 @@ public class Estadisticas {
         return count;
     }
 
-    public int cantidadCancionesPorTempoYRangoFechas(MyList<Cancion> canciones, double tempoInicio, double tempoFin, Date fechaInicio, Date fechaFin) {
+    public int cantidadCancionesPorTempoYRangoFechas(MyHash<String,Cancion> canciones, double tempoInicio, double tempoFin, Date fechaInicio, Date fechaFin) {
         int count = 0;
-        for (int i = 0; i < canciones.size(); i++) {
-            Cancion cancion = canciones.get(i);
-            if (cancion.getTempo() >= tempoInicio && cancion.getTempo() <= tempoFin && cancion.getFecha().compareTo(fechaInicio) >= 0 && cancion.getFecha().compareTo(fechaFin) <= 0) {
+        MyList<String> cancionesKeys = canciones.keySet();
+        for (int i = 0; i < cancionesKeys.size(); i++) {
+            String key = cancionesKeys.get(i);
+            Cancion cancion = canciones.get(key);
+            MyList<String> nombresCancionesContadas = new MyLinkedListImpl<>();
+            if (!nombresCancionesContadas.contains(cancion.getNombre()) && cancion.getTempo() >= tempoInicio && cancion.getTempo() <= tempoFin && cancion.getFecha().compareTo(fechaInicio) >= 0 && cancion.getFecha().compareTo(fechaFin) <= 0) {
                 count++;
             }
         }
