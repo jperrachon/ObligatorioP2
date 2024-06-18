@@ -45,6 +45,8 @@ public class Cancion {
     public double getTempo() { return tempo; }
     public void setTempo(double tempo) { this.tempo = tempo; }
 
+    public Pais getPais() { return pais; }
+
 
 
 

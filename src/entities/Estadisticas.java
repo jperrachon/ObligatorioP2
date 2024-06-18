@@ -10,44 +10,59 @@ import adt.hash.MyHashImpl;
 
 public class Estadisticas {
 
-    private MyHash<Date, MyList<Cancion>> top50PorFechaPorPais(Pais pais) {
+
+
+    private MyHash<Date, MyList<Cancion>> top50PorFechaPorPais(Pais pais, MyHash<String, Cancion> canciones) {
         MyHash<Date, MyList<Cancion>> top50PorFechaPorPais = new MyHashImpl<>();
-
-
-
+        if(pais.getTop50PorFecha().isEmpty()) {
+            for (int i = 0; i < canciones.size(); i++) {
+                Cancion cancion = canciones.get(canciones.keySet().get(i));
+                if (cancion.getPais().equals(pais)) {
+                    Date fecha = cancion.getFecha();
+                    if (top50PorFechaPorPais.contains(fecha)) {
+                        top50PorFechaPorPais.get(fecha).add(cancion);
+                    } else {
+                        MyList<Cancion> cancionesPorFecha = new MyLinkedListImpl<>();
+                        cancionesPorFecha.add(cancion);
+                        top50PorFechaPorPais.put(fecha, cancionesPorFecha);
+                    }
+                }
+                pais.setTop50PorFecha(top50PorFechaPorPais);
+            }
+        }
+        else {
+            top50PorFechaPorPais = pais.getTop50PorFecha();
+        }
         return top50PorFechaPorPais;
     }
 
-    public MyList<Cancion> top10CancionesPorPaisYFecha(Pais pais, Date fecha) {
-        MyList<Cancion> canciones = pais.getTop50PorFecha().get(fecha);
-        if (canciones != null && canciones.size() > 10) {
-            return canciones.subList(0, 10);
+    public MyList<Cancion> top10CancionesPorPaisYFecha(Pais pais, Date fecha, MyHash<String, Cancion> canciones) {
+        MyList<Cancion> cancionesTop10 = top50PorFechaPorPais(pais, canciones).get(fecha);
+        if (canciones.size() > 10) {
+            return cancionesTop10.subList(0, 10);
         }
-        return canciones;
+        return cancionesTop10;
     }
 
-    public MyList<Cancion> top5CancionesEnMasTop50(MyList<Pais> paises, Date fecha) {
-
+    public MyList<Cancion> top5CancionesEnMasTop50(MyList<Pais> paises, Date fecha, MyHash<String, Cancion> canciones) {
         MyHash<String, Integer> cancionFrecuencia = new MyHashImpl<>();
         int paisesLength = paises.size();
         for (int i = 0; i < paisesLength; i++) {
-            MyList<Cancion> canciones = paises.get(i).getTop50PorFecha().get(fecha);
-            int cancionesLength = canciones.size();
-            if (canciones != null) {
-                for (int j = 0; j < cancionesLength; j++) {
-                    Cancion cancion = canciones.get(j);
-                    if (cancionFrecuencia.contains(cancion.getId())) {
-                        cancionFrecuencia.put(cancion.getId(), cancionFrecuencia.get(cancion.getId()) + 1);
-                    } else {
-                        cancionFrecuencia.put(cancion.getId(), 1);
-                    }
+            MyList<Cancion> cancionesTop = top50PorFechaPorPais(paises.get(i),canciones).get(fecha);
+            int cancionesLength = cancionesTop.size();
+            for (int j = 0; j < cancionesLength; j++) {
+                Cancion cancion = cancionesTop.get(j);
+                if (cancionFrecuencia.contains(cancion.getId())) {
+                    cancionFrecuencia.put(cancion.getId(), cancionFrecuencia.get(cancion.getId()) + 1);
+                } else {
+                    cancionFrecuencia.put(cancion.getId(), 1);
                 }
             }
         }
         MyList<Cancion> todasCanciones = new MyLinkedListImpl<>();
         for (int i = 0; i < paisesLength; i++) {
             Pais pais = paises.get(i);
-            for (int j = 0; j <pais.getTop50PorFecha().get(fecha).size(); j++) {
+            for (int j = 0; j <pais.getTop50PorFecha().get(fecha).size(); j++) { //en este punto, todos los paises tienen el hash top50PorFecha, entonces podemos llamar el get en lugar de la funcion top50PorFechaPorPais
                 todasCanciones.add(pais.getTop50PorFecha().get(fecha).get(j));
             }
         }
@@ -59,11 +74,11 @@ public class Estadisticas {
         return todasCanciones;
     }
 
-    public MyList<Artista> top7ArtistasMasAparecen(List<Pais> paises, Date fechaInicio, Date fechaFin) {
+    public MyList<Artista> top7ArtistasMasAparecen(List<Pais> paises, Date fechaInicio, Date fechaFin, MyHash<String,Cancion> totalCanciones) {
        MyHash<String, Integer> artistaFrecuencia = new MyHashImpl<>();
         for (int i = 0; i < paises.size(); i++) {
             Pais pais = paises.get(i);
-            MyList<Date> fechas = pais.getTop50PorFecha().keySet();
+            MyList<Date> fechas = top50PorFechaPorPais(pais,totalCanciones).keySet();
             for (int j = 0; j < pais.getTop50PorFecha().size(); j++) {
                 Date fecha = fechas.get(j);
                 if (fecha.compareTo(fechaInicio) >= 0 && fecha.compareTo(fechaFin) <= 0) {
@@ -71,10 +86,13 @@ public class Estadisticas {
                     if (canciones != null) {
                         for (int k = 0; k < canciones.size(); k++) {
                             Cancion cancion = canciones.get(k);
-                            if (artistaFrecuencia.contains(cancion.getArtista().getNombre())) {
-                                artistaFrecuencia.put(cancion.getArtista().getNombre(), artistaFrecuencia.get(cancion.getArtista().getNombre()) + 1);
-                            } else {
-                                artistaFrecuencia.put(cancion.getArtista().getNombre(), 1);
+                            for (int l = 0; l < cancion.getArtista().size(); l++) {
+                                String artista = cancion.getArtista().get(l).getNombre();
+                                if (artistaFrecuencia.contains(artista)) {
+                                    artistaFrecuencia.put(artista, artistaFrecuencia.get(cancion.getArtista().getNombre()) + 1);
+                                } else {
+                                    artistaFrecuencia.put(artista, 1);
+                                }
                             }
                         }
                     }
