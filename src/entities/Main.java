@@ -7,7 +7,7 @@ public class Main {
         parser.parseCsv("src/dataset.csv");
 
         //TODO: hacer un main para las funciones de estadisticas
-        Estadisticas estadisticas = new Estadisticas();
+        /*Estadisticas estadisticas = new Estadisticas();
         while (true) {
             //create unitests menu
             System.out.println("1. Top 10 canciones por pais y fecha");
@@ -42,6 +42,7 @@ public class Main {
                     break;
             }
         }
+         */
 
 
 
