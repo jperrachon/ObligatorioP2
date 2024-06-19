@@ -132,7 +132,7 @@ public class Estadisticas {
         for (int i = 0; i < cancionesKeys.size(); i++) {
             String key = cancionesKeys.get(i);
             Cancion cancion = canciones.get(key);
-            MyList<String> nombresCancionesContadas = new MyLinkedListImpl<>();
+            MyList<String> nombresCancionesContadas = new MyLinkedListImpl<>(); //para no contar la misma cancion en diferentes tops
             if (!nombresCancionesContadas.contains(cancion.getNombre()) && cancion.getTempo() >= tempoInicio && cancion.getTempo() <= tempoFin && cancion.getFecha().compareTo(fechaInicio) >= 0 && cancion.getFecha().compareTo(fechaFin) <= 0) {
                 count++;
             }

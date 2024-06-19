@@ -5,7 +5,7 @@ import adt.linkedlist.MyList;
 
 public class MyHashImpl<K extends Comparable<K>, V> implements MyHash<K,V> {
     private HNode<K, V>[] table;
-    private static final int INITIAL_CAPACITY = 10;
+    private static final int INITIAL_CAPACITY = 1000;
     private int size;
 
     public MyHashImpl() {
@@ -16,7 +16,14 @@ public class MyHashImpl<K extends Comparable<K>, V> implements MyHash<K,V> {
     @Override
     public void put(K key, V value) {
         if (size == table.length) {
-            throw new RuntimeException("Hash table is full");
+            HNode<K, V>[] oldTable = table;
+            table = new HNode[table.length * 2];
+            size = 0;
+            for (HNode<K, V> node : oldTable) {
+                if (node != null) {
+                    put(node.getKey(), node.getValue());
+                }
+            }
         }
 
         int index = hash(key);
