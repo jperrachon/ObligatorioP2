@@ -5,12 +5,10 @@ import adt.linkedlist.MyList;
 
 public class Artista {
     private String nombre;
-    private MyList<Cancion> canciones;
 
 
     public Artista(String nombre) {
         this.nombre = nombre;
-        this.canciones = new MyLinkedListImpl<>();
 
     }
 
@@ -21,18 +19,6 @@ public class Artista {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public MyList<Cancion> getCanciones() {
-        return canciones;
-    }
-
-    public void setCanciones(MyList<Cancion> canciones) {
-        this.canciones = canciones;
-    }
-
-    public void agregarCancion(Cancion cancion) {
-        this.canciones.add(cancion);
     }
 
     @Override
