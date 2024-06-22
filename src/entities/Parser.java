@@ -32,6 +32,7 @@ public class Parser {
         String line = "";
         String cvsSplitBy = "\",\"";
         int count=0;
+        int cvsFileLength = 748803;
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -39,23 +40,18 @@ public class Parser {
             // Leer la cabecera y omitirla
             String header = br.readLine();
             while ((line = br.readLine()) != null ) {
-                String SpotifyId = line.substring(1, line.indexOf("\","));
 
+                String[] datos = line.split(cvsSplitBy);
 
-                String todo = line.substring(line.indexOf(",")+1);
-                String[] datos = todo.split(cvsSplitBy);
-
-
-
-                String nombreCancion = datos[0]; // name
-
-                String nombreArtista = datos[1]; // artists
+                String SpotifyId = datos[0]; // id
+                String nombreCancion = datos[1]; // name
+                String nombreArtista = datos[2]; // artists
                 //separar nombre artista en varios artistas
                 String[] nombresArtistas = nombreArtista.split(",");
-                int puesto = Integer.parseInt(datos[2]); // daily_rank
-                String paisNombre = datos[5]; // country
-                Date fechaSnapshot = dateFormat.parse(datos[6]); // snapshot_date
-                double tempo = Double.parseDouble(datos[22]); // tempo
+                int puesto = Integer.parseInt(datos[3]); // daily_rank
+                String paisNombre = datos[6]; // country
+                Date fechaSnapshot = dateFormat.parse(datos[7]); // snapshot_date
+                double tempo = Double.parseDouble(datos[23]); // tempo
 //                int duracion = Integer.parseInt(datos[9]); // duration_ms
 
                 MyList<Artista> artistasCancion = new MyLinkedListImpl<>();
@@ -99,8 +95,31 @@ public class Parser {
                 tuplaCancion cancionTupla = new tuplaCancion(pais, fechaSnapshot, puesto, cancion);
                 tuplasCancionesPorFecha.insert(fechaSnapshot,  cancionTupla);
                 count++;
+                int barLength = 50; // Longitud de la barra de progreso
+                // Calcular el porcentaje de progreso
+                double progressPercentage = (double) count / cvsFileLength;
 
+                // Calcular el número de caracteres `#` para mostrar
+                int progressChars = (int) (progressPercentage * barLength);
+
+                // Crear la barra de progreso
+                StringBuilder progressBar = new StringBuilder();
+                progressBar.append("\r[");
+                for (int i = 0; i < barLength; i++) {
+                    if (i < progressChars) {
+                        progressBar.append("#");
+                    } else {
+                        progressBar.append("-");
+                    }
+                }
+                progressBar.append("] ");
+                progressBar.append((int) (progressPercentage * 100));
+                progressBar.append("%");
+
+                // Imprimir la barra de progreso
+                System.out.print(progressBar.toString());
             }
+
 
 
         } catch (IOException e) {
