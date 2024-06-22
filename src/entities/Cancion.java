@@ -26,11 +26,10 @@ public class Cancion {
 
     @Override
     public String toString() {
-        return "Cancion{" +
-                "nombre='" + nombre + '\'' +
-                ", artistas=" + artistas +
-                ", tempo=" + tempo +
-                '}';
+        return "Cancion" +
+                "nombre =" + nombre + '\'' +
+                ", artistas =" + artistas +
+                ", tempo =" + tempo ;
     }
 
 
