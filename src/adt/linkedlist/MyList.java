@@ -20,5 +20,7 @@ public interface MyList<T> {
 
     Node<T> getLast();
 
+    void modify(int position, T value);
+
 
 }

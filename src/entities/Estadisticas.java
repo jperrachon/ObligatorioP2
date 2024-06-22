@@ -6,49 +6,49 @@ import java.util.*;
 import adt.linkedlist.MyLinkedListImpl;
 import adt.hash.MyHash;
 import adt.hash.MyHashImpl;
+import adt.tree.MyTree;
+import adt.tree.MyTreeImpl;
 
 
 public class Estadisticas {
-
-
-
-    private MyHash<Date, MyList<Cancion>> top50PorFechaPorPais(Pais pais, MyHash<String, Cancion> canciones) {
+    private MyHash<Date, MyList<Cancion>> top50PorFechaPorPais(Pais pais, MyTree<Date, tuplaCancion> tuplasCanciones, MyHash<String, Cancion> canciones) {
         MyHash<Date, MyList<Cancion>> top50PorFechaPorPais = new MyHashImpl<>();
-        if(pais.getTop50PorFecha().isEmpty()) {
-            for (int i = 0; i < canciones.size(); i++) {
-                Cancion cancion = canciones.get(canciones.keySet().get(i));
-                if (cancion.getPais().equals(pais)) {
-                    Date fecha = cancion.getFecha();
-                    if (top50PorFechaPorPais.contains(fecha)) {
-                        top50PorFechaPorPais.get(fecha).add(cancion);
+        if (pais.getTop50PorFecha().isEmpty()) {
+            while (tuplasCanciones.getNext() != null) {
+                tuplaCancion tupla = tuplasCanciones.getNext();
+                if (tupla.getPais().equals(pais)) {
+                    if (top50PorFechaPorPais.contains(tupla.getFecha())) {
+                        top50PorFechaPorPais.get(tupla.getFecha()).add(tupla.getCancion());
                     } else {
-                        MyList<Cancion> cancionesPorFecha = new MyLinkedListImpl<>();
-                        cancionesPorFecha.add(cancion);
-                        top50PorFechaPorPais.put(fecha, cancionesPorFecha);
+                        MyList<Cancion> cancionesTop = new MyLinkedListImpl<>();
+                        cancionesTop.add(tupla.getCancion());
+                        top50PorFechaPorPais.put(tupla.getFecha(), cancionesTop);
                     }
                 }
-                pais.setTop50PorFecha(top50PorFechaPorPais);
             }
         }
-        else {
-            top50PorFechaPorPais = pais.getTop50PorFecha();
+        else{
+                top50PorFechaPorPais = pais.getTop50PorFecha();
+            }
+            return top50PorFechaPorPais;
         }
-        return top50PorFechaPorPais;
-    }
 
-    public MyList<Cancion> top10CancionesPorPaisYFecha(Pais pais, Date fecha, MyHash<String, Cancion> canciones) {
-        MyList<Cancion> cancionesTop10 = top50PorFechaPorPais(pais, canciones).get(fecha);
+
+    public MyList<Cancion> top10CancionesPorPaisYFecha(Pais pais, Date fecha, MyHash<String, Cancion> canciones, MyTree<Date, tuplaCancion> tuplasCanciones) {
+        MyList<Cancion> cancionesTop10 = top50PorFechaPorPais(pais, tuplasCanciones, canciones).get(fecha);
         if (canciones.size() > 10) {
             return cancionesTop10.subList(0, 10);
         }
         return cancionesTop10;
     }
 
-    public MyList<Cancion> top5CancionesEnMasTop50(MyList<Pais> paises, Date fecha, MyHash<String, Cancion> canciones) {
+    public MyList<Cancion> top5CancionesEnMasTop50(MyHash<String,Pais> paises, Date fecha, MyHash<String, Cancion> canciones, MyTree<Date, tuplaCancion> tuplasCanciones) {
         MyHash<String, Integer> cancionFrecuencia = new MyHashImpl<>();
-        int paisesLength = paises.size();
+        MyList<String> paisesKeys = paises.keySet();
+        int paisesLength = paisesKeys.size();
         for (int i = 0; i < paisesLength; i++) {
-            MyList<Cancion> cancionesTop = top50PorFechaPorPais(paises.get(i),canciones).get(fecha);
+            Pais pais = paises.get(paisesKeys.get(i));
+            MyList<Cancion> cancionesTop = top50PorFechaPorPais(pais,tuplasCanciones,canciones).get(fecha);
             int cancionesLength = cancionesTop.size();
             for (int j = 0; j < cancionesLength; j++) {
                 Cancion cancion = cancionesTop.get(j);
@@ -61,7 +61,7 @@ public class Estadisticas {
         }
         MyList<Cancion> todasCanciones = new MyLinkedListImpl<>();
         for (int i = 0; i < paisesLength; i++) {
-            Pais pais = paises.get(i);
+            Pais pais = paises.get(paisesKeys.get(i));
             for (int j = 0; j <pais.getTop50PorFecha().get(fecha).size(); j++) { //en este punto, todos los paises tienen el hash top50PorFecha, entonces podemos llamar el get en lugar de la funcion top50PorFechaPorPais
                 todasCanciones.add(pais.getTop50PorFecha().get(fecha).get(j));
             }
@@ -74,11 +74,13 @@ public class Estadisticas {
         return todasCanciones;
     }
 
-    public MyList<Artista> top7ArtistasMasAparecen(List<Pais> paises, Date fechaInicio, Date fechaFin, MyHash<String,Cancion> totalCanciones) {
+    public MyList<Artista> top7ArtistasMasAparecen(MyHash<String,Pais> paises, Date fechaInicio, Date fechaFin, MyHash<String,Cancion> totalCanciones, MyTree<Date, tuplaCancion> tuplasCanciones) {
+        //TODO: cambiar funcion, ya extiste lista de fechas
        MyHash<String, Integer> artistaFrecuencia = new MyHashImpl<>();
-        for (int i = 0; i < paises.size(); i++) {
-            Pais pais = paises.get(i);
-            MyList<Date> fechas = top50PorFechaPorPais(pais,totalCanciones).keySet();
+       MyList<String> paisesKeys = paises.keySet();
+        for (int i = 0; i < paisesKeys.size(); i++) {
+            Pais pais = paises.get(paisesKeys.get(i));
+            MyList<Date> fechas = top50PorFechaPorPais(pais,tuplasCanciones,totalCanciones).keySet();
             for (int j = 0; j < pais.getTop50PorFecha().size(); j++) {
                 Date fecha = fechas.get(j);
                 if (fecha.compareTo(fechaInicio) >= 0 && fecha.compareTo(fechaFin) <= 0) {
@@ -112,7 +114,8 @@ public class Estadisticas {
         return artistas;
     }
 
-    public int cantidadVecesArtistaEnTop(Pais pais, Artista artista, Date fecha, MyHash<String, Cancion> todasCanciones) {
+    //TODO: cambiar funcion, tiene que contar la cantidad de veces que aparece un artista en el top de todos los paises
+   /* public int cantidadVecesArtistaEnTop(Pais pais, Artista artista, Date fecha, MyHash<String, Cancion> todasCanciones) {
         MyList<Cancion> canciones = top50PorFechaPorPais(pais, todasCanciones).get(fecha);
         int count = 0;
         if (canciones != null) {
@@ -124,9 +127,9 @@ public class Estadisticas {
             }
         }
         return count;
-    }
-
-    public int cantidadCancionesPorTempoYRangoFechas(MyHash<String,Cancion> canciones, double tempoInicio, double tempoFin, Date fechaInicio, Date fechaFin) {
+    }*/
+    //TODO: arreglar
+    /*public int cantidadCancionesPorTempoYRangoFechas(MyHash<String,Cancion> canciones, double tempoInicio, double tempoFin, Date fechaInicio, Date fechaFin) {
         int count = 0;
         MyList<String> cancionesKeys = canciones.keySet();
         for (int i = 0; i < cancionesKeys.size(); i++) {
@@ -138,5 +141,5 @@ public class Estadisticas {
             }
         }
         return count;
-    }
+    }*/
 }

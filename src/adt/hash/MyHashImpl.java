@@ -65,14 +65,14 @@ public class MyHashImpl<K extends Comparable<K>, V> implements MyHash<K,V> {
         }
     }
 
+
     @Override
     public boolean contains(K key) {
         int index = hash(key);
-        while (table[index] != null && table[index].getKey().compareTo(key) != 0) {
-            index = (index + 1) % table.length;
+        if (table[index] != null && table[index].getKey().compareTo(key) == 0) {
+            return true;
         }
-
-        return table[index] != null;
+        return false;
     }
 
     @Override
@@ -114,4 +114,10 @@ public class MyHashImpl<K extends Comparable<K>, V> implements MyHash<K,V> {
         }
         return keys;
     }
+
+
+
+
+
+
 }

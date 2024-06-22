@@ -15,15 +15,17 @@ import java.util.*;
 
 public class Parser {
     private MyHash<String,Cancion> canciones;
-    private MyList<Pais> paises;
+    private MyTree<Date,tuplaCancion> tuplasCancionesPorFecha;
+    private MyHash<String,Pais> paises;
     private MyList<Artista> artistas;
-    private MyTree<Date,Cancion> arbolCancionesPorFecha;
+    private MyList<Date> fechas;
 
     public Parser() {
         this.canciones = new MyHashImpl<>();
-        this.paises = new MyLinkedListImpl<>();
+        this.paises = new MyHashImpl<>();
         this.artistas = new MyLinkedListImpl<>();
-        this.arbolCancionesPorFecha = new MyTreeImpl<>();
+        this.tuplasCancionesPorFecha = new MyTreeImpl<>();
+        this.fechas = new MyLinkedListImpl<>();
     }
 
     public void parseCsv(String csvFile) {
@@ -32,9 +34,6 @@ public class Parser {
         int count=0;
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-
-
 
         try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
             // Leer la cabecera y omitirla
@@ -57,7 +56,7 @@ public class Parser {
                 String paisNombre = datos[5]; // country
                 Date fechaSnapshot = dateFormat.parse(datos[6]); // snapshot_date
                 double tempo = Double.parseDouble(datos[22]); // tempo
-                int duracion = Integer.parseInt(datos[9]); // duration_ms
+//                int duracion = Integer.parseInt(datos[9]); // duration_ms
 
                 MyList<Artista> artistasCancion = new MyLinkedListImpl<>();
                 for(String nombre : nombresArtistas){
@@ -68,18 +67,33 @@ public class Parser {
                 if(paisNombre.isEmpty()){
                     paisNombre = "Global";
                 }
-                String Id = SpotifyId + paisNombre + fechaSnapshot.toString();
-                Pais pais = new Pais(paisNombre);
-                Cancion cancion = new Cancion(nombreCancion, artistasCancion, SpotifyId, puesto, fechaSnapshot, tempo, pais);
+                String tuplaId = SpotifyId + paisNombre + fechaSnapshot.toString();
+                Pais pais;
+                if(paises.contains(paisNombre)) {
+                    pais = paises.get(paisNombre);
+                }
+                else {
+                    pais = new Pais(paisNombre);
+                    paises.put(paisNombre, pais);
+                    System.out.println(paisNombre);
+                }
 
-                canciones.put(Id, cancion);
-                paises.add(pais);
-                arbolCancionesPorFecha.insert(fechaSnapshot, cancion);
+                if(!fechas.contains(fechaSnapshot)){
+                    fechas.add(fechaSnapshot);
+                }
+                Cancion cancion;
+                if (!canciones.contains(SpotifyId)) {
+                    cancion = new Cancion(nombreCancion, artistasCancion, SpotifyId, tempo);
+                    canciones.put(SpotifyId, cancion);
+                }
+                else {
+                    cancion = canciones.get(SpotifyId);
+                }
+
+                tuplaCancion cancionTupla = new tuplaCancion(pais, fechaSnapshot, puesto, cancion);
+                tuplasCancionesPorFecha.insert(fechaSnapshot,  cancionTupla);
                 count++;
                 System.out.println(count);
-
-
-
             }
             System.out.println(canciones.size());
 
@@ -102,7 +116,7 @@ public class Parser {
         return canciones;
     }
 
-    public MyList<Pais> getPaises() {
+    public MyHash<String,Pais> getPaises() {
         return paises;
     }
 
@@ -110,7 +124,11 @@ public class Parser {
         return artistas;
     }
 
-    public MyTree<Date, Cancion> getArbolCancionesPorFecha() {
-        return arbolCancionesPorFecha;
+    public MyList<Date> getFechas() {
+        return fechas;
+    }
+
+    public MyTree<Date, tuplaCancion> getTuplasCancionesPorFecha() {
+        return tuplasCancionesPorFecha;
     }
 }

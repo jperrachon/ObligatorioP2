@@ -67,6 +67,26 @@ public class MyLinkedListImpl<T> implements MyList<T>, MyQueue<T>, MyStack<T>{
         }
     }
 
+    @Override
+    public void modify(int position, T value) {
+        int tempPosition = 0;
+        Node<T> temp = this.first;
+
+        // Se busca el nodo que corresponde con la posicion
+        while (temp != null && tempPosition != position) {
+
+            temp = temp.getNext();
+            tempPosition++;
+
+        }
+        // si se encontro la posicion se modifica el valor
+        // en caso que se haya llegado al final y no se llego a la posicion se ignora
+        if (tempPosition == position) {
+            temp.setValue(value);
+
+        }
+    }
+
     private void addToBeginning(T value) {
         if (value != null) {
 
