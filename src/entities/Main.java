@@ -27,7 +27,6 @@ public class Main {
             switch (option) {
                 case 1:
                     System.out.println("Top 10 canciones por pais y fecha");
-
                     Pais pais = seleccionarPais(parser, scanner);
                     Date fecha = seleccionarFecha(parser, scanner);
                     MyList<Cancion> top10 = estadisticas.top10CancionesPorPaisYFecha(pais, fecha, parser.getTuplasCancionesPorFecha());
@@ -111,7 +110,7 @@ public class Main {
     }
 
     private static Artista seleccionarArtista(Parser parser, Scanner scanner){
-        System.out.println("elegir artista: ");
+        System.out.println("Elegir artista deseado: ");
         scanner.nextLine();
         String nombreArtista = scanner.nextLine();
         if (parser.getArtistas().contains(nombreArtista)){
