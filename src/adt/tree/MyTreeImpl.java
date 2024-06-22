@@ -1,5 +1,6 @@
 package adt.tree;
 
+import adt.linkedlist.MyLinkedListImpl;
 import adt.linkedlist.MyList;
 
 public class MyTreeImpl<K extends Comparable<K>,T> implements MyTree<K,T>{
@@ -66,10 +67,12 @@ public class MyTreeImpl<K extends Comparable<K>,T> implements MyTree<K,T>{
         else{
             if(current.getLeftChild()!=null && !current.getLeftChild().getVisited()){
                 current = current.getLeftChild();
+                current.setVisited(true);
                 return current.getValue();
             }
             else if(current.getRightChild()!=null && !current.getRightChild().getVisited()){
                 current = current.getRightChild();
+                current.setVisited(true);
                 return current.getValue();
             }
             else{
@@ -80,6 +83,7 @@ public class MyTreeImpl<K extends Comparable<K>,T> implements MyTree<K,T>{
                 }
                 if(parent==null){
                     root.resetVisited();
+                    current = null;
                     return null;
                 }
                 else{
@@ -90,7 +94,44 @@ public class MyTreeImpl<K extends Comparable<K>,T> implements MyTree<K,T>{
 
         }
 
+
     }
+    @Override
+    public MyList<T> getValues() {
+        //returns the values of the tree inorder
+        MyList<T> list = new MyLinkedListImpl<>();
+        Node<K,T> temp = root;
+        while(temp!=null){
+            if(temp.getLeftChild()!=null && !temp.getLeftChild().getVisited()){
+                temp = temp.getLeftChild();
+            }
+            else{
+                list.add(temp.getValue());
+                temp.setVisited(true);
+                if(temp.getRightChild()!=null && !temp.getRightChild().getVisited()){
+                    temp = temp.getRightChild();
+                }
+                else{
+                    Node<K,T> parent = temp;
+                    while(parent!=null && (parent.getRightChild()==null || parent.getRightChild().getVisited())){
+                        parent.setVisited(true);
+                        parent = parent.getParent();
+                    }
+                    if(parent==null){
+                        root.resetVisited();
+                        break;
+                    }
+                    else{
+                        temp = parent.getRightChild();
+                    }
+                }
+            }
+        }
+        return list;
+    }
+
+
+
 
 
 

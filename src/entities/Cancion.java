@@ -24,6 +24,15 @@ public class Cancion {
     public double getTempo() { return tempo; }
     public void setTempo(double tempo) { this.tempo = tempo; }
 
+    @Override
+    public String toString() {
+        return "Cancion{" +
+                "nombre='" + nombre + '\'' +
+                ", artistas=" + artistas +
+                ", tempo=" + tempo +
+                '}';
+    }
+
 
 
 

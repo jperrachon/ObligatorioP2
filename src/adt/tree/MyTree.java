@@ -13,5 +13,7 @@ public interface MyTree<K,T> {
 
     public T getNext();
 
+    public MyList<T> getValues();
+
 
 }

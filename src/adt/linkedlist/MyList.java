@@ -22,5 +22,8 @@ public interface MyList<T> {
 
     void modify(int position, T value);
 
+    String toString();
+    int indexOf(T value);
+
 
 }

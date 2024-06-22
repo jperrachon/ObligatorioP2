@@ -34,4 +34,11 @@ public class Artista {
     public void agregarCancion(Cancion cancion) {
         this.canciones.add(cancion);
     }
+
+    @Override
+    public String toString() {
+        return "Artista{" +
+                "nombre='" + nombre + '\'' +
+                '}';
+    }
 }

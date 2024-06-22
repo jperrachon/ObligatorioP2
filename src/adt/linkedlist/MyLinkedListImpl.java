@@ -250,6 +250,23 @@ public class MyLinkedListImpl<T> implements MyList<T>, MyQueue<T>, MyStack<T>{
         return size;
     }
 
+    @Override
+    public int indexOf(T value) {
+        int index = -1;
+        Node<T> temp = this.first;
+        int tempIndex = 0;
+
+        while (temp != null && index == -1) {
+            if (temp.getValue().equals(value)) {
+                index = tempIndex;
+            }
+            temp = temp.getNext();
+            tempIndex++;
+        }
+
+        return index;
+    }
+
     // Operaciones particulares a Queue
 
     @Override
@@ -294,6 +311,17 @@ public class MyLinkedListImpl<T> implements MyList<T>, MyQueue<T>, MyStack<T>{
 
 
         return valueToReturn;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        Node<T> temp = this.first;
+        while (temp != null) {
+            sb.append(temp.getValue()).append(" ");
+            temp = temp.getNext();
+        }
+        return sb.toString();
     }
 
 

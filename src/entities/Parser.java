@@ -17,13 +17,13 @@ public class Parser {
     private MyHash<String,Cancion> canciones;
     private MyTree<Date,tuplaCancion> tuplasCancionesPorFecha;
     private MyHash<String,Pais> paises;
-    private MyList<Artista> artistas;
+    private MyHash<String,Artista> artistas;
     private MyList<Date> fechas;
 
     public Parser() {
         this.canciones = new MyHashImpl<>();
         this.paises = new MyHashImpl<>();
-        this.artistas = new MyLinkedListImpl<>();
+        this.artistas = new MyHashImpl<>();
         this.tuplasCancionesPorFecha = new MyTreeImpl<>();
         this.fechas = new MyLinkedListImpl<>();
     }
@@ -60,8 +60,14 @@ public class Parser {
 
                 MyList<Artista> artistasCancion = new MyLinkedListImpl<>();
                 for(String nombre : nombresArtistas){
-                    Artista artista = new Artista(nombre);
-                    artistas.add(artista);
+                    Artista artista;
+                    if(artistas.contains(nombre)){
+                        artista = artistas.get(nombre);
+                    }
+                    else{
+                        artista = new Artista(nombre);
+                        artistas.put(nombre, artista);
+                    }
                     artistasCancion.add(artista);
                 }
                 if(paisNombre.isEmpty()){
@@ -71,11 +77,11 @@ public class Parser {
                 Pais pais;
                 if(paises.contains(paisNombre)) {
                     pais = paises.get(paisNombre);
+
                 }
                 else {
                     pais = new Pais(paisNombre);
                     paises.put(paisNombre, pais);
-                    System.out.println(paisNombre);
                 }
 
                 if(!fechas.contains(fechaSnapshot)){
@@ -93,9 +99,9 @@ public class Parser {
                 tuplaCancion cancionTupla = new tuplaCancion(pais, fechaSnapshot, puesto, cancion);
                 tuplasCancionesPorFecha.insert(fechaSnapshot,  cancionTupla);
                 count++;
-                System.out.println(count);
+
             }
-            System.out.println(canciones.size());
+
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -120,7 +126,7 @@ public class Parser {
         return paises;
     }
 
-    public MyList<Artista> getArtistas() {
+    public MyHash<String,Artista> getArtistas() {
         return artistas;
     }
 
