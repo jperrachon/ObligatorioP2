@@ -23,7 +23,6 @@ public class Artista {
 
     @Override
     public String toString() {
-        return "Artista" +
-                "nombre = " + nombre + '\'' ;
+        return ", Nombre de Artista: "+ nombre;
     }
 }
