@@ -31,7 +31,7 @@ public class Main {
                     Date fecha = seleccionarFecha(parser, scanner);
                     MyList<Cancion> top10 = estadisticas.top10CancionesPorPaisYFecha(pais, fecha, parser.getTuplasCancionesPorFecha());
                     for (int i = 0; i < top10.size(); i++) {
-                        System.out.println(i + ". " + top10.get(i));
+                        System.out.println(i+1 + ". " + top10.get(i));
                     }
                     break;
                 case 2:
@@ -39,7 +39,7 @@ public class Main {
                     Date fecha2 = seleccionarFecha(parser, scanner);
                     MyList<String> top5 = estadisticas.top5CancionesEnMasTop50(parser.getPaises(), fecha2, parser.getTuplasCancionesPorFecha());
                     for (int i = 0; i < top5.size(); i++) {
-                        System.out.println(i + ". " + top5.get(i));
+                        System.out.println(i+1 + ". " + top5.get(i));
                     }
                     break;
                 case 3:
@@ -63,14 +63,16 @@ public class Main {
                     System.out.println("Cantidad de canciones con un tempo en un rango específico para un rango específico de fechas.");
                     Date fechaInicio2 = seleccionarFecha(parser, scanner);
                     Date fechaFin2 = seleccionarFecha(parser, scanner);
-                    System.out.println("Ingresar rango de tempo (min max): ");
+                    System.out.println("Ingresar rango de tempo minimo: ");
                     double min = scanner.nextDouble();
+                    System.out.println("Ingresar rango de tempo maximo: ");
                     double max = scanner.nextDouble();
                     int cantidad2 = estadisticas.cantidadCancionesPorTempoYRangoFechas(min, max,fechaInicio2, fechaFin2, parser.getTuplasCancionesPorFecha());
                     System.out.println("Cantidad de canciones con tempo en rango: " + cantidad2);
                     break;
 
                 case 6:
+                    System.out.println("Gracias por usar Spotify! Nos vemos luego :)");
                     System.exit(0);
                     break;
                 default:
@@ -106,6 +108,10 @@ public class Main {
             System.out.println(i + ". " + nombresPaises.get(i));
         }
         int nroPais = Integer.parseInt(scanner.next());
+        if (nroPais >= nombresPaises.size() || nroPais < 0){
+            System.out.println("Pais no encontrado");
+            return seleccionarPais(parser, scanner);
+        }
         return parser.getPaises().get(nombresPaises.get(nroPais));
     }
 
