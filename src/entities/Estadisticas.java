@@ -121,12 +121,14 @@ public class Estadisticas {
 
     public int cantidadCancionesPorTempoYRangoFechas(double tempoInicio, double tempoFin, Date fechaInicio, Date fechaFin, MyTree<Date, tuplaCancion> tuplasCanciones) {
         int count = 0;
+        MyHash<String, Cancion> canciones = new MyHashImpl<>();
         tuplaCancion tupla = tuplasCanciones.getNext();
         while (tupla != null) {
             if (tupla.getFecha().compareTo(fechaInicio) >= 0 && tupla.getFecha().compareTo(fechaFin) <= 0) {
                 Cancion cancion = tupla.getCancion();
-                if (cancion.getTempo() >= tempoInicio && cancion.getTempo() <= tempoFin) {
+                if (cancion.getTempo() >= tempoInicio && cancion.getTempo() <= tempoFin && !canciones.contains(cancion.getId())){
                     count++;
+                    canciones.put(cancion.getId(), cancion);
                 }
             }
             tupla = tuplasCanciones.getNext();

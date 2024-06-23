@@ -26,8 +26,7 @@ public class Cancion {
 
     @Override
     public String toString() {
-        return "Cancion" +
-                "nombre =" + nombre + '\'' +
+        return "Nombre de cancion = " + nombre + '\'' +
                 ", artistas =" + artistas +
                 ", tempo =" + tempo ;
     }

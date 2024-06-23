@@ -1,7 +1,6 @@
 package entities;
 
-import adt.linkedlist.MyLinkedListImpl;
-import adt.linkedlist.MyList;
+
 
 public class Artista {
     private String nombre;
@@ -23,7 +22,6 @@ public class Artista {
 
     @Override
     public String toString() {
-        return "Artista" +
-                "nombre = " + nombre + '\'' ;
+        return "Nombre de artista = " + nombre + '\'' ;
     }
 }
