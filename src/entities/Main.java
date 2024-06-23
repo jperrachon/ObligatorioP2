@@ -30,16 +30,16 @@ public class Main {
                     Pais pais = seleccionarPais(parser, scanner);
                     Date fecha = seleccionarFecha(parser, scanner);
                     MyList<Cancion> top10 = estadisticas.top10CancionesPorPaisYFecha(pais, fecha, parser.getTuplasCancionesPorFecha());
-                    for (int i = 1; i <= top10.size(); i++) {
-                        System.out.println(i + ". " + top10.get(i-1));
+                    for (int i = 0; i < top10.size(); i++) {
+                        System.out.println(i + ". " + top10.get(i));
                     }
                     break;
                 case 2:
                     System.out.println("Top 5 canciones en mas top 50");
                     Date fecha2 = seleccionarFecha(parser, scanner);
                     MyList<String> top5 = estadisticas.top5CancionesEnMasTop50(parser.getPaises(), fecha2, parser.getTuplasCancionesPorFecha());
-                    for (int i = 1; i <= top5.size(); i++) {
-                        System.out.println(i + ". " + top5.get(i-1));
+                    for (int i = 0; i < top5.size(); i++) {
+                        System.out.println(i + ". " + top5.get(i));
                     }
                     break;
                 case 3:
@@ -47,8 +47,8 @@ public class Main {
                     Date fechaInicio = seleccionarFecha(parser, scanner);
                     Date fechaFin = seleccionarFecha(parser, scanner);
                     MyList<Artista> top7 = estadisticas.top7ArtistasMasAparecen(parser.getPaises(), fechaInicio, fechaFin, parser.getTuplasCancionesPorFecha(), parser.getFechas());
-                    for (int i = 1; i <= top7.size(); i++) {
-                        System.out.println(i + ". " + top7.get(i-1));
+                    for (int i = 0; i < top7.size(); i++) {
+                        System.out.println(i + ". " + top7.get(i));
                     }
                     break;
                 case 4:
@@ -63,9 +63,8 @@ public class Main {
                     System.out.println("Cantidad de canciones con un tempo en un rango específico para un rango específico de fechas.");
                     Date fechaInicio2 = seleccionarFecha(parser, scanner);
                     Date fechaFin2 = seleccionarFecha(parser, scanner);
-                    System.out.println("Ingresar tempo minimo: ");
+                    System.out.println("Ingresar rango de tempo (min max): ");
                     double min = scanner.nextDouble();
-                    System.out.println("Ingresar tempo maximo: ");
                     double max = scanner.nextDouble();
                     int cantidad2 = estadisticas.cantidadCancionesPorTempoYRangoFechas(min, max,fechaInicio2, fechaFin2, parser.getTuplasCancionesPorFecha());
                     System.out.println("Cantidad de canciones con tempo en rango: " + cantidad2);

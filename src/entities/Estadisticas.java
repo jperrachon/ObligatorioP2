@@ -59,43 +59,34 @@ public class Estadisticas {
         return cancionesNombre;
     }
 
-    public MyList<Artista> top7ArtistasMasAparecen(MyHash<String,Pais> paises, Date fechaInicio, Date fechaFin,  MyTree<Date, tuplaCancion> tuplasCanciones, MyList<Date> fechas) {
+    public MyList<String> top7ArtistasMasAparecen(MyHash<String, Pais> paises, Date fechaInicio, Date fechaFin, MyTree<Date, tuplaCancion> tuplasCanciones, MyList<Date> fechas) {
         MyHash<String, Integer> artistaFrecuencia = new MyHashImpl<>();
-        for (int i = 0; i < fechas.size(); i++) {
-            Date fecha = fechas.get(i);
-            if (fecha.compareTo(fechaInicio) >= 0 && fecha.compareTo(fechaFin) <= 0) {
-                MyList<String> paisesKeys = paises.keySet();
-                for (int j = 0; j < paisesKeys.size(); j++) {
-                    Pais pais = paises.get(paisesKeys.get(j));
-                    MyTree<Integer,Cancion> top50PorFechaPorPais = topPorFechaPorPais(pais, tuplasCanciones, fecha);
-                    MyList<Cancion> canciones = top50PorFechaPorPais.getValues();
-                    for (int k = 0; k < canciones.size(); k++) {
-                        Cancion cancion = canciones.get(k);
-                        MyList<Artista> artistas = cancion.getArtista();
-                        for (int l = 0; l < artistas.size(); l++) {
-                            Artista artista = artistas.get(l);
-                            if (artistaFrecuencia.contains(artista.getNombre())) {
-                                artistaFrecuencia.put(artista.getNombre(), artistaFrecuencia.get(artista.getNombre()) + 1);
-                            } else {
-                                artistaFrecuencia.put(artista.getNombre(), 1);
-                            }
-                        }
+        tuplaCancion tupla = tuplasCanciones.getNext();
+        while (tupla != null) {
+            if (tupla.getFecha().compareTo(fechaInicio) >= 0 && tupla.getFecha().compareTo(fechaFin) <= 0) {
+                Cancion cancion = tupla.getCancion();
+                MyList<Artista> artistas = cancion.getArtista();
+                for (int i = 0; i < artistas.size(); i++) {
+                    Artista artista = artistas.get(i);
+                    if (artistaFrecuencia.contains(artista.getNombre())) {
+                        artistaFrecuencia.put(artista.getNombre(), artistaFrecuencia.get(artista.getNombre()) + 1);
+                    } else {
+                        artistaFrecuencia.put(artista.getNombre(), 1);
                     }
                 }
             }
+            tupla = tuplasCanciones.getNext();
         }
         MyList<String> artistasNombre = artistaFrecuencia.keySet();
         artistasNombre.sort((a, b) -> artistaFrecuencia.get(b) - artistaFrecuencia.get(a));
-        MyList<Artista> top7Artistas = new MyLinkedListImpl<>();
-        for (int i = 0; i < artistasNombre.size(); i++) {
-            if (i == 7) {
-                break;
-            }
-            top7Artistas.add(new Artista(artistasNombre.get(i)));
+        if (artistasNombre.size() > 7) {
+            return artistasNombre.subList(0, 7);
         }
-        return top7Artistas;
+        return artistasNombre;
+
 
     }
+
 
     public int cantidadVecesArtistaEnTop(MyHash<String, Pais> paises ,Artista artista, Date fecha, MyTree<Date, tuplaCancion> tuplasCanciones) {
         int count = 0;
