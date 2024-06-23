@@ -48,7 +48,7 @@ public class Main {
                     Date fechaFin = seleccionarFecha(parser, scanner);
                     MyList<String> top7 = estadisticas.top7ArtistasMasAparecen(parser.getPaises(), fechaInicio, fechaFin, parser.getTuplasCancionesPorFecha(), parser.getFechas());
                     for (int i = 0; i < top7.size(); i++) {
-                        System.out.println(i + ". " + top7.get(i));
+                        System.out.println(i+1 + ". " + top7.get(i));
                     }
                     break;
                 case 4:
