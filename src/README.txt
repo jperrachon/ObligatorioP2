@@ -12,4 +12,4 @@ El promedio de ejecucion de la tercera funcion depende del rango de fechas dado.
 La cuarta consulta tiene un promedio de ejecucion de 2.4 segundos.
 La quinta funcion tiene un promedio de ejecucion de 44 para 5 meses de rango.
 
-
+Para elegir pais hay que escribir su numero de lista correspondiente y no el nombre del pais.
